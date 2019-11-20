@@ -18,8 +18,13 @@ object WordCountUtils {
 
 
     def countByWord(spark: SparkSession) = {
-      dataSet.sort("value").groupBy("value").count()
+      dataSet.groupBy("value").count()
     }
+
+    def sortWords(spark: SparkSession) = {
+      dataSet.sort("value")
+    }
+
   }
 
 }

@@ -52,15 +52,47 @@ class WordCountUtilsTest extends DefaultFeatureSpecWithSpark {
   }
 
   feature("Count Words") {
-    ignore("basic test case") {}
+    scenario("basic test case") {
+      import spark.implicits._
+      val expectedResult = Seq(("worst", BigInt(2))).toDF().collect()
 
-    ignore("should not aggregate dissimilar words") {}
+      val actualResult = WordCountUtils.StringDataset(Seq("worst", "worst").toDS()).countByWord(spark).collect()
 
-    ignore("test case insensitivity") {}
+      actualResult.contains(expectedResult)
+      expectedResult.contains(actualResult)
+    }
+
+    scenario("should not aggregate dissimilar words") {
+      import spark.implicits._
+      val expectedResult = Seq(("times", BigInt(1)), ("worst", BigInt(2))).toDF().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst", "times", "worst").toDS()).countByWord(spark).collect()
+
+      actualResult.contains(expectedResult)
+      expectedResult.contains(actualResult)
+    }
+
+    scenario("test case insensitivity") {
+      import spark.implicits._
+      val expectedResult = Seq(("times", BigInt(1)), ("worst", BigInt(2))).toDF().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("Worst", "Times", "worst").toDS()).countByWord(spark).collect()
+
+      actualResult.contains(expectedResult)
+      expectedResult.contains(actualResult)
+    }
   }
 
   feature("Sort Words") {
-    ignore("test ordering words") {}
+    scenario("test ordering words") {
+      import spark.implicits._
+      val expectedResult = Seq("banana", "times", "worst", "worst").toDF().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst", "times", "worst", "banana").toDS()).sortWords(spark).collect()
+
+      actualResult.contains(expectedResult)
+      expectedResult.contains(actualResult)
+    }
   }
 
 }

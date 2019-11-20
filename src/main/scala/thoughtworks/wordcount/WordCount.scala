@@ -33,6 +33,7 @@ object WordCount {
       .text(inputPath)
       .as[String]
       .splitWords(spark)
+      .sortWords(spark)
       .countByWord(spark)
       .write
       .csv(outputPath)
