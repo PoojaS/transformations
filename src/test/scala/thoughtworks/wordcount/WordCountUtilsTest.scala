@@ -14,13 +14,41 @@ class WordCountUtilsTest extends DefaultFeatureSpecWithSpark {
       actualResult.shouldEqual(expectedResult)
     }
 
-    ignore("test splitting a dataset of words by period") {}
+    scenario("test splitting a dataset of words by period") {
+      import spark.implicits._
+      val expectedResult = Seq("worst", "times").toDS().collect()
 
-    ignore("test splitting a dataset of words by comma") {}
+      val actualResult = WordCountUtils.StringDataset(Seq("worst. times").toDS()).splitWords(spark).collect()
 
-    ignore("test splitting a dataset of words by hypen") {}
+      actualResult.shouldEqual(expectedResult)
+    }
 
-    ignore("test splitting a dataset of words by semi-colon") {}
+    scenario("test splitting a dataset of words by comma") {
+      import spark.implicits._
+      val expectedResult = Seq("worst", "times").toDS().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst, times").toDS()).splitWords(spark).collect()
+
+      actualResult.shouldEqual(expectedResult)
+    }
+
+    scenario("test splitting a dataset of words by hypen") {
+      import spark.implicits._
+      val expectedResult = Seq("worst", "times").toDS().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst--times").toDS()).splitWords(spark).collect()
+
+      actualResult.shouldEqual(expectedResult)
+    }
+
+    scenario("test splitting a dataset of words by semi-colon") {
+      import spark.implicits._
+      val expectedResult = Seq("worst", "times").toDS().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst; times").toDS()).splitWords(spark).collect()
+
+      actualResult.shouldEqual(expectedResult)
+    }
   }
 
   feature("Count Words") {
