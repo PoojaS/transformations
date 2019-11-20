@@ -1,13 +1,18 @@
 package thoughtworks.wordcount
 
-import WordCountUtils._
-import org.apache.spark.sql.Dataset
 import thoughtworks.DefaultFeatureSpecWithSpark
 
 
 class WordCountUtilsTest extends DefaultFeatureSpecWithSpark {
   feature("Split Words") {
-    ignore("test splitting a dataset of words by spaces") {}
+    scenario("test splitting a dataset of words by spaces") {
+      import spark.implicits._
+      val expectedResult = Seq("worst", "times").toDS().collect()
+
+      val actualResult = WordCountUtils.StringDataset(Seq("worst times").toDS()).splitWords(spark).collect()
+
+      actualResult.shouldEqual(expectedResult)
+    }
 
     ignore("test splitting a dataset of words by period") {}
 
